@@ -30,4 +30,4 @@ cask "vagrant"
 cask "postman"
 cask "ngrok"
 cask "background-music"
-
+cask "iterm2"
