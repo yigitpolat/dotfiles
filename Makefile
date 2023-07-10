@@ -4,9 +4,10 @@ brew:
 	brew bundle --file ./homebrew/Brewfile
 
 zsh:
-# sh -c https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+# rm -rf ~/.oh-my-zsh
+# sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 	git clone https://github.com/spaceship-prompt/spaceship-prompt.git ~/.oh-my-zsh/custom/themes/spaceship-prompt --depth=1
-	ln -s /.oh-my-zsh/custom/themes/spaceship-prompt/spaceship.zsh-theme ~/.oh-my-zsh/custom/themes/spaceship.zsh-theme
+	ln -s ~/.oh-my-zsh/custom/themes/spaceship-prompt/spaceship.zsh-theme ~/.oh-my-zsh/custom/themes/spaceship.zsh-theme
 	git clone https://github.com/z-shell/F-Sy-H.git ~/.oh-my-zsh/custom/plugins/F-Sy-H
 	git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
@@ -21,7 +22,6 @@ sync:
 clean:
 	rm ~/.gitconfig
 	rm ~/.gitignore
-	rm -rf ~/.oh-my-zsh
 	rm ~/.zshrc
 
 .PHONY: all brew zsh sync clean
