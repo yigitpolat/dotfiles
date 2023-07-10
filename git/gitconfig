@@ -29,7 +29,10 @@
 
 [init]
 	defaultBranch = main
+<<<<<<< Updated upstream:git/gitconfig
 
+=======
+>>>>>>> Stashed changes:gitconfig
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
