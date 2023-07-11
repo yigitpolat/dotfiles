@@ -7,13 +7,6 @@ source $ZSH/oh-my-zsh.sh
 ZSH_THEME="spaceship"
 plugins=(git kubectl F-Sy-H zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
 
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
-  export EDITOR='code'
-fi
-
 # Example aliases
 alias zshconfig="mate ~/.zshrc"
 alias ohmyzsh="mate ~/.oh-my-zsh"
