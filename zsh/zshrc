@@ -5,17 +5,11 @@
 export ZSH="$HOME/.oh-my-zsh"
 source $ZSH/oh-my-zsh.sh
 ZSH_THEME="spaceship"
-plugins=(
-    git 
-    kubectl
-    zsh-autosuggestions
-    zsh-history-substring-search
-    zsh-syntax-highlighting
-    )
+plugins=(git kubectl zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
 
 # Example aliases
-alias configzsh="code ~/.zshrc"
-alias sourcezsh="source ~/.zshrc"
+alias zshconfig="mate ~/.zshrc"
+alias ohmyzsh="mate ~/.oh-my-zsh"
 alias dwn="yt-dlp -o \"%(playlist)s/%(title)s.%(ext)s\" --parse-metadata \"playlist:%(album)s\" --parse-metadata \"playlist:%(artist)s\" --parse-metadata \"%(playlist_index)s:%(track_number)s\"  --embed-metadata --paths /Users/yp/Documents/music/albums --embed-thumbnail --extract-audio --audio-format mp3 --audio-quality 0"
 
 # Spaceship
