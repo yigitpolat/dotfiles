@@ -3,9 +3,14 @@ all: sync
 brew:
 	brew bundle --file ./homebrew/Brewfile
 
+test:
+	rm -rf ~/.oh-my-zsh
+	curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash
+	echo test
+
 zsh:
-# rm -rf ~/.oh-my-zsh
-# sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+	rm -rf ~/.oh-my-zsh
+	curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | zsh
 	git clone https://github.com/spaceship-prompt/spaceship-prompt.git ~/.oh-my-zsh/custom/themes/spaceship-prompt --depth=1
 	ln -s ~/.oh-my-zsh/custom/themes/spaceship-prompt/spaceship.zsh-theme ~/.oh-my-zsh/custom/themes/spaceship.zsh-theme
 	git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
@@ -14,12 +19,14 @@ zsh:
 
 
 
-sync:
+sync: clean
 	[ -f ~/.gitconfig ] || ln -s ~/.dotfiles/git/gitconfig ~/.gitconfig
 	[ -f ~/.gitignore ] || ln -s ~/.dotfiles/git/gitignore ~/.gitignore
 	[ -f ~/.zshrc ] || ln -s ~/.dotfiles/zsh/zshrc ~/.zshrc
-# defaults write com.googlecode.iterm2 PrefsCustomFolder -string "~/.dotfiles/iterm2"
-# defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+	[ -f '~/Library/Application Support/iTerm2/DynamicProfiles' ] || ln -s ~/.dotfiles/iterm/Profiles.json '~/Library/Application Support/iTerm2/DynamicProfiles'
+	defaults write com.googlecode.iterm2 PrefsCustomFolder -string  ~/.dotfiles/iterm
+	defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+	
 
 clean:
 	rm ~/.gitconfig
