@@ -34,4 +34,3 @@ clean:
 	rm ~/.zshrc
 
 .PHONY: all brew zsh sync clean
-1
