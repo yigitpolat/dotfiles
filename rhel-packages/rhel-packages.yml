@@ -1,0 +1,15 @@
+---
+rhel_packages:
+  - ansible-core
+  - cockpit
+  - cockpit-machines
+  - libvirt
+  - podman
+  - git
+  - podman
+  - skopeo
+  - tmux
+  - wget
+  - yum
+  - jq
+  - pip

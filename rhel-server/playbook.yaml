@@ -1,0 +1,87 @@
+---
+- name: Prepare RHEL playground
+  hosts: all
+  user: root
+  
+  vars_files:
+    - ../rhel-packages/rhel-packages.yml
+
+  tasks:
+
+    - name: Subscribe to RHEL subscription
+      community.general.redhat_subscription:
+        state: present
+        username: "{{ username }}"
+        password: "{{ password }}"
+        auto_attach: true
+
+    - name: Update every ansible.builtin.package
+      ansible.builtin.package:
+        name: '*'
+        state: latest
+
+    - name: Install packages
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ rhel_packages }}"
+
+    - name: Change httpd port config to 8080
+      ansible.builtin.lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^Listen '
+        line: Listen 8080
+        backrefs: true
+        state: present
+
+    - name: Enable and run cockpit and libvirt
+      ansible.builtin.service:
+        name: "{{ item }}"
+        enabled: true
+        state: started
+      loop:
+        - cockpit.socket
+        - libvirtd
+
+    - name: Allow 8443 port on firewalld
+      ansible.posix.firewalld:
+        port: "{{ item }}"
+        permanent: true
+        state: enabled
+        immediate: true
+      loop:
+        - 8443/tcp
+        - 433/tcp
+        - 80/tcp
+
+    - name: Add a new user called yp and assign root rights to new user
+      ansible.builtin.user:
+        name: yp
+        state: present
+        groups:
+          - wheel
+        append: true
+
+    - name: Git clone Hetzner-OCP
+      ansible.builtin.git:
+        repo: https://github.com/redhat-emea-ssa-team/hetzner-ocp4
+        dest: /root/
+        version: master
+      ignore_errors: true
+
+    - name: Pip install from requirement.txt in global-python folder
+      ansible.builtin.pip:
+        requirements: ../python_packages/requirements.txt
+
+    - name: Create new ssh-key pair and add it to authorized hosts file
+      ansible.builtin.user:
+        name: root
+        generate_ssh_key: true
+        ssh_key_file: /root/.ssh/id_rsa
+      register: key_status
+
+    - name: Add id_rsa.pub to authorized keys
+      ansible.posix.authorized_key:
+        user: root
+        state: present
+        key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
