@@ -9,8 +9,8 @@ xcode-select --install
 ## 2. Clone repository
 
 ```bash
-git clone https://github.com/yigitpolat/dotfiles.git ~/.dotfiles
-cd  ~/.dotfiles
+git clone https://github.com/yigitpolat/dotfiles.git ~/Documents/GitHub/dotfiles
+cd  ~/Documents/GitHub/dotfiles
 ```
 
 ## 3. Brew install
