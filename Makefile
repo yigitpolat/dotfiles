@@ -32,5 +32,6 @@ clean:
 	rm ~/.gitconfig
 	rm ~/.gitignore
 	rm ~/.zshrc
+	rm ~/Library/Application\ Support/iTerm2/DynamicProfiles/Profiles.json2
 
 .PHONY: all brew zsh sync clean
