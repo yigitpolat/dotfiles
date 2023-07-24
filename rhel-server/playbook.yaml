@@ -2,7 +2,7 @@
 - name: Prepare RHEL playground
   hosts: all
   user: root
-  
+
   vars_files:
     - ../rhel-packages/rhel-packages.yml
 
@@ -20,11 +20,22 @@
         name: '*'
         state: latest
 
+    - name: Enable codeready-builder repository
+      community.general.rhsm_repository:
+        name: codeready-builder-for-rhel-9-x86_64-rpms
+        state: enabled
+
     - name: Install packages
       ansible.builtin.package:
         name: "{{ item }}"
         state: present
       loop: "{{ rhel_packages }}"
+
+    - name: Download a binary from the url and make it executable
+      ansible.builtin.get_url:
+        url:  https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+        dest: /usr/bin/yq
+        mode: '0755'
 
     - name: Change httpd port config to 8080
       ansible.builtin.lineinfile:
@@ -43,7 +54,7 @@
         - cockpit.socket
         - libvirtd
 
-    - name: Allow 8443 port on firewalld
+    - name: Allow ports on firewalld
       ansible.posix.firewalld:
         port: "{{ item }}"
         permanent: true
@@ -71,7 +82,7 @@
 
     - name: Pip install from requirement.txt in global-python folder
       ansible.builtin.pip:
-        requirements: ../python_packages/requirements.txt
+        requirements: ../python-packages/requirements.txt
 
     - name: Create new ssh-key pair and add it to authorized hosts file
       ansible.builtin.user:
