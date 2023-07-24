@@ -14,3 +14,4 @@ rhel_packages:
   - jq
   - pip
   - bash-completion
+  - nmap
