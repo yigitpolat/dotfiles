@@ -13,3 +13,4 @@ rhel_packages:
   - yum
   - jq
   - pip
+  - bash-completion
