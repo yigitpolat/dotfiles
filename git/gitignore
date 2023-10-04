@@ -74,7 +74,7 @@ cover/
 # Django stuff:
 
 # Flask stuff:
-instance/
+# instance/
 .webassets-cache
 
 # Scrapy stuff:
