@@ -4,9 +4,14 @@
   user: root
 
   vars_files:
-    - ../rhel-packages/rhel-packages.yml
+    - rhel-packages.yml
 
   tasks:
+
+    - name: Set a hostname specifying strategy
+      ansible.builtin.hostname:
+        name: ypyp-server
+        use: systemd
 
     - name: Subscribe to RHEL subscription
       community.general.redhat_subscription:
@@ -14,26 +19,40 @@
         username: "{{ username }}"
         password: "{{ password }}"
         auto_attach: true
-
-    - name: Update every ansible.builtin.package
-      ansible.builtin.package:
-        name: '*'
-        state: latest
+      when: ansible_distribution == "RedHat"
 
     - name: Enable codeready-builder repository
       community.general.rhsm_repository:
         name: codeready-builder-for-rhel-9-x86_64-rpms
         state: enabled
+      when: ansible_distribution == "RedHat"
 
     - name: Install packages
-      ansible.builtin.package:
+      ansible.builtin.dnf:
+        name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+        state: present
+      when: ansible_distribution == "RedHat"
+
+    - name: Enable codeready-builder repository
+      ansible.builtin.dnf:
+        name: epel-release
+        enablerepo: crb
+      when: ansible_distribution == "CentOS"
+
+    - name: Update every packages
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+
+    - name: Install packages
+      ansible.builtin.dnf:
         name: "{{ item }}"
         state: present
       loop: "{{ rhel_packages }}"
 
     - name: Download a binary from the url and make it executable
       ansible.builtin.get_url:
-        url:  https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+        url: https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
         dest: /usr/bin/yq
         mode: '0755'
 
@@ -53,6 +72,7 @@
       loop:
         - cockpit.socket
         - libvirtd
+        - firewalld
 
     - name: Allow ports on firewalld
       ansible.posix.firewalld:
@@ -64,6 +84,7 @@
         - 8443/tcp
         - 433/tcp
         - 80/tcp
+        - 8080/tcp
 
     - name: Add a new user called yp and assign root rights to new user
       ansible.builtin.user:
@@ -76,13 +97,16 @@
     - name: Git clone Hetzner-OCP
       ansible.builtin.git:
         repo: https://github.com/redhat-emea-ssa-team/hetzner-ocp4
-        dest: /root/
+        dest: /root/hetzner-ocp4
         version: master
       ignore_errors: true
 
-    - name: Pip install from requirement.txt in global-python folder
+    - name: Pip install ansible in global-python folder
       ansible.builtin.pip:
-        requirements: ../python-packages/requirements.txt
+        name: "{{ item }}"
+      loop:
+        - ansible-navigator
+        - ansible-tower-cli
 
     - name: Create new ssh-key pair and add it to authorized hosts file
       ansible.builtin.user:
@@ -91,8 +115,13 @@
         ssh_key_file: /root/.ssh/id_rsa
       register: key_status
 
+    - name: Slurp /root/.ssh/id_rsa.pub
+      ansible.builtin.slurp:
+        src: /root/.ssh/id_rsa.pub
+      register: slurped_user_data
+
     - name: Add id_rsa.pub to authorized keys
       ansible.posix.authorized_key:
         user: root
         state: present
-        key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+        key: "{{ slurped_user_data.content | b64decode }}"
