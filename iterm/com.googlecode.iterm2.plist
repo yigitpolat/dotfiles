@@ -1278,7 +1278,7 @@
 	<key>OpenBookmark</key>
 	<false/>
 	<key>OpenTmuxDashboardIfHiddenWindows</key>
-	<false/>
+	<true/>
 	<key>OpenTmuxWindowsIn</key>
 	<integer>2</integer>
 	<key>PointerActions</key>
