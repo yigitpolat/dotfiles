@@ -19,7 +19,7 @@ cd  ~/Documents/GitHub/dotfiles
 make brew
 ```
 
-## 4. Sync 
+## 4. Sync
 
 ```bash
 make sync

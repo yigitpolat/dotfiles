@@ -16,15 +16,10 @@ sync: clean
 	[ -f ~/.gitconfig ] || ln -s ~/Documents/GitHub/dotfiles/git/gitconfig ~/.gitconfig
 	[ -f ~/.gitignore ] || ln -s ~/Documents/GitHub/dotfiles/git/gitignore ~/.gitignore
 	[ -f ~/.zshrc ] || ln -s ~/Documents/GitHub/dotfiles/zsh/zshrc ~/.zshrc
-	[ -f ~/Library/Application\ Support/iTerm2/DynamicProfiles/Profiles.json ] || ln -s ~/Documents/GitHub/dotfiles/iterm/Profiles.json ~/Library/Application\ Support/iTerm2/DynamicProfiles/Profiles.json
-	defaults write com.googlecode.iterm2 PrefsCustomFolder -string  ~/Documents/GitHub/dotfiles/iterm
-	defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
-	
 
 clean:
 	rm ~/.gitconfig
 	rm ~/.gitignore
 	rm ~/.zshrc
-	rm ~/Library/Application\ Support/iTerm2/DynamicProfiles/Profiles.json2
 
 .PHONY: all brew zsh sync clean
